@@ -33,9 +33,10 @@ app.use((req, res, next) => {
 
 ///------STK push ------/////
 
-app.get('/stk', access, _urlencoded, function(req, res) {
+app.post('/stk', access, _urlencoded, function(req, res) {
 
-
+    let _phoneNumber = req.body.phone
+    let _Amount = req.body.amount
 
     let endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     let auth = "Bearer " + req.access_token
@@ -62,10 +63,10 @@ app.get('/stk', access, _urlencoded, function(req, res) {
                 "Password": password,
                 "Timestamp": timeStamp,
                 "TransactionType": "CustomerPayBillOnline",
-                "Amount": "1",
+                "Amount": _Amount,
                 "PartyA": "254746291229",
                 "PartyB": _shortCode, //Till  No.
-                "PhoneNumber": "254746291229",
+                "PhoneNumber": _phoneNumber,
                 "CallBackURL": "https://b84e-196-207-163-68.ngrok.io/stk_callback",
                 "AccountReference": "TopFind digital Merchants",
                 "TransactionDesc": "_transDec"
