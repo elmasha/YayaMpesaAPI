@@ -65,7 +65,7 @@ app.post('/stk', access, _urlencoded, function(req, res) {
                 "Timestamp": timeStamp,
                 "TransactionType": "CustomerPayBillOnline",
                 "Amount": _Amount,
-                "PartyA": "254746291229",
+                "PartyA": _phoneNumber,
                 "PartyB": _shortCode, //Till  No.
                 "PhoneNumber": _phoneNumber,
                 "CallBackURL": "https://b84e-196-207-163-68.ngrok.io/stk_callback",
