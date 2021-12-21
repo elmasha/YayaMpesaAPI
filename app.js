@@ -31,6 +31,10 @@ app.use((req, res, next) => {
     next();
 });
 
+
+
+let _checkoutRequestId;
+
 ///------STK push ------/////
 
 app.post('/stk', access, _urlencoded, function(req, res) {
@@ -38,6 +42,7 @@ app.post('/stk', access, _urlencoded, function(req, res) {
     let _phoneNumber = req.body.phone
     let _Amount = req.body.amount
     let _UserID = req.body.user_id
+    let _UserName = req.body.User_name;
 
     let endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     let auth = "Bearer " + req.access_token
@@ -86,6 +91,10 @@ app.post('/stk', access, _urlencoded, function(req, res) {
                 res.status(200).json(body);
                 console.log(body);
                 console.log("USER_ID", _UserID)
+                console.log("USER_Name", _UserName)
+
+                _checkoutRequestId = body.CheckoutRequestID;
+                console.log("CHECKOUT_ID", _checkoutRequestId)
 
 
 
@@ -100,13 +109,24 @@ app.post('/stk', access, _urlencoded, function(req, res) {
 });
 //----MIDDLEWARE---///
 const middleware = (req, res, next) => {
-
+    req.checkoutID = _checkoutRequestId;
+    req.uid = _UserID;
+    req.name = _UserName;
     next();
 };
 
 
 ///------STK_CALLBACK-----///
 app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
+        var transID = '';
+        var amount = '';
+        var transdate = '';
+        var transNo = '';
+
+        let _checkoutID = req._checkoutRequestId;
+        let _Name = req.name;
+        let _UID = req.uid;
+
         console.log('.......... STK Callback ..................');
         if (res.status(200)) {
 
@@ -114,6 +134,106 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
 
             res.json((req.body.Body.stkCallback.CallbackMetadata))
             console.log(req.body.Body.stkCallback.CallbackMetadata)
+
+            if (Balance = req.body.Body.stkCallback.CallbackMetadata.Item[2].Name == 'Balance') {
+
+                amount = req.body.Body.stkCallback.CallbackMetadata.Item[0].Value;
+                transID = req.body.Body.stkCallback.CallbackMetadata.Item[1].Value;
+                transNo = req.body.Body.stkCallback.CallbackMetadata.Item[4].Value;
+                transdate = req.body.Body.stkCallback.CallbackMetadata.Item[3].Value;
+
+                db.collection("Payments_backup").doc(transID).set({
+                    mpesaReceipt: transID,
+                    paidAmount: amount,
+                    transNo: transNo,
+                    Doc_ID: _UID,
+                    checkOutReqID: _checkoutID,
+                    user_Name: _Name,
+                    timestamp: transdate,
+                }).then((ref) => {
+                    console.log("Added doc with ID: ", transID);
+
+
+                    ///-----Admin section -----//
+
+                    db.collection("Yaya_Employer").doc(_UID).update({
+                        preference_count: true,
+                        mpesa_receipt: transID,
+                        checkOutReqID: _checkoutID,
+                        payment_date: new Date(),
+                    }).then((ref) => {
+                        console.log("Notification sent", transID);
+                    })
+
+                    ////------Close Admin -----////
+
+                });
+
+                db.collection("Yaya_Employer").doc(_UID).collection("Notifications").doc().set({
+                    title: "Mpesa payment",
+                    desc: _Name + " you have successfully a payment ksh/" + _Amount,
+                    type: "Mpesa payment",
+                    to: _UID,
+                    from: _UID,
+                    timestamp: new Date(),
+                }).then((ref) => {
+                    console.log("Notification sent", transID);
+                });
+
+
+            } else {
+
+                amount = req.body.Body.stkCallback.CallbackMetadata.Item[0].Value;
+                transID = req.body.Body.stkCallback.CallbackMetadata.Item[1].Value;
+                transNo = req.body.Body.stkCallback.CallbackMetadata.Item[3].Value;
+                transdate = req.body.Body.stkCallback.CallbackMetadata.Item[2].Value;
+
+                db.collection("Payments_backup").doc(transID).set({
+                    mpesaReceipt: transID,
+                    paidAmount: amount,
+                    transNo: transNo,
+                    Doc_ID: _UID,
+                    checkOutReqID: _checkoutID,
+                    user_Name: _Name,
+                    timestamp: transdate,
+                    User_id: _UID,
+                }).then((ref) => {
+                    console.log("Added doc with ID: ", transID);
+
+
+                    ///-----Admin section -----//
+
+                    db.collection("Yaya_Employer").doc(_UID).update({
+                        preference_count: true,
+                        mpesa_receipt: transID,
+                        checkOutReqID: _checkoutID,
+                        payment_date: new Date(),
+                    }).then((ref) => {
+                        console.log("Notification sent", transID);
+                    })
+
+                    ////------Close Admin -----////
+
+                });
+
+                db.collection("Yaya_Employer").doc(_UID).collection("Notifications").doc().set({
+                    title: "Mpesa payment",
+                    desc: _Name + " you have successfully a payment ksh/" + _Amount,
+                    type: "Mpesa payment",
+                    to: _UID,
+                    from: _UID,
+                    timestamp: new Date(),
+                }).then((ref) => {
+                    console.log("Notification sent", transID);
+                });
+
+
+            }
+
+
+
+
+
         }
 
     })
