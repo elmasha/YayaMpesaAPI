@@ -33,7 +33,8 @@ app.use((req, res, next) => {
 
 
 
-let _checkoutRequestId, _UserName, _UserID;
+let _checkoutRequestId, _UserID;
+var _Username;
 
 ///------STK push ------/////
 
@@ -42,7 +43,7 @@ app.post('/stk', access, _urlencoded, function(req, res) {
     let _phoneNumber = req.body.phone
     let _Amount = req.body.amount
     _UserID = req.body.user_id
-    _UserName = req.body.User_name
+    _Username = req.body.User_name
 
     let endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     let auth = "Bearer " + req.access_token
@@ -90,13 +91,11 @@ app.post('/stk', access, _urlencoded, function(req, res) {
 
                 res.status(200).json(body);
                 console.log(body);
-                console.log("USER_ID", _UserID)
-                console.log("USER_Name", _UserName)
+                console.log("USER_ID", _UserID);
+                console.log("USER_Name", _Username);
 
                 _checkoutRequestId = body.CheckoutRequestID;
-                console.log("CHECKOUT_ID", _checkoutRequestId)
-
-
+                console.log("CHECKOUT_ID", _checkoutRequestId);
 
             }
 
@@ -111,7 +110,7 @@ app.post('/stk', access, _urlencoded, function(req, res) {
 const middleware = (req, res, next) => {
     req.checkoutID = _checkoutRequestId;
     req.uid = _UserID;
-    req.name = _UserName;
+    req.name = _Username;
     next();
 };
 
