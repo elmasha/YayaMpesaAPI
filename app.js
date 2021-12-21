@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 
 
 let _checkoutRequestId, _UserID;
-var _Username;
+var Username;
 
 ///------STK push ------/////
 
@@ -43,7 +43,7 @@ app.post('/stk', access, _urlencoded, function(req, res) {
     let _phoneNumber = req.body.phone
     let _Amount = req.body.amount
     _UserID = req.body.user_id
-    _Username = req.body.User_name
+    Username = req.body.User_name
 
     let endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     let auth = "Bearer " + req.access_token
@@ -92,7 +92,7 @@ app.post('/stk', access, _urlencoded, function(req, res) {
                 res.status(200).json(body);
                 console.log(body);
                 console.log("USER_ID", _UserID);
-                console.log("USER_Name", _Username);
+                console.log("USER_Name", Username);
 
                 _checkoutRequestId = body.CheckoutRequestID;
                 console.log("CHECKOUT_ID", _checkoutRequestId);
@@ -110,7 +110,7 @@ app.post('/stk', access, _urlencoded, function(req, res) {
 const middleware = (req, res, next) => {
     req.checkoutID = _checkoutRequestId;
     req.uid = _UserID;
-    req.name = _Username;
+    req.name = Username;
     next();
 };
 
@@ -122,14 +122,14 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
         var transdate = '';
         var transNo = '';
 
-        let _checkoutID = req._checkoutRequestId;
+        let _checkout_ID = req.checkoutID;
         let _Name = req.name;
         let _UID = req.uid;
 
         console.log('.......... STK Callback ..................');
         if (res.status(200)) {
 
-            console.log("CheckOutId", _checkoutID)
+            console.log("CheckOutId", _checkout_ID)
 
             res.json((req.body.Body.stkCallback.CallbackMetadata))
             console.log(req.body.Body.stkCallback.CallbackMetadata)
@@ -146,7 +146,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
                     paidAmount: amount,
                     transNo: transNo,
                     Doc_ID: _UID,
-                    checkOutReqID: _checkoutID,
+                    checkOutReqID: _checkout_ID,
                     user_Name: _Name,
                     timestamp: transdate,
                 }).then((ref) => {
@@ -158,7 +158,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
                     db.collection("Yaya_Employer").doc(_UID).update({
                         preference_count: true,
                         mpesa_receipt: transID,
-                        checkOutReqID: _checkoutID,
+                        checkOutReqID: _checkout_ID,
                         payment_date: new Date(),
                     }).then((ref) => {
                         console.log("Notification sent", transID);
@@ -170,7 +170,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
 
                 db.collection("Yaya_Employer").doc(_UID).collection("Notifications").doc().set({
                     title: "Mpesa payment",
-                    desc: _Name + " you have successfully a payment ksh/" + _Amount,
+                    desc: _Name + " you have successfully a paid ksh/" + _Amount,
                     type: "Mpesa payment",
                     to: _UID,
                     from: _UID,
@@ -192,7 +192,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
                     paidAmount: amount,
                     transNo: transNo,
                     Doc_ID: _UID,
-                    checkOutReqID: _checkoutID,
+                    checkOutReqID: _checkout_ID,
                     user_Name: _Name,
                     timestamp: transdate,
                     User_id: _UID,
@@ -205,7 +205,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
                     db.collection("Yaya_Employer").doc(_UID).update({
                         preference_count: true,
                         mpesa_receipt: transID,
-                        checkOutReqID: _checkoutID,
+                        checkOutReqID: _checkout_ID,
                         payment_date: new Date(),
                     }).then((ref) => {
                         console.log("Notification sent", transID);
@@ -217,7 +217,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
 
                 db.collection("Yaya_Employer").doc(_UID).collection("Notifications").doc().set({
                     title: "Mpesa payment",
-                    desc: _Name + " you have successfully a payment ksh/" + _Amount,
+                    desc: _Name + " you have successfully a paid ksh/" + _Amount,
                     type: "Mpesa payment",
                     to: _UID,
                     from: _UID,
