@@ -68,7 +68,7 @@ app.post('/stk', access, _urlencoded, function(req, res) {
                 "PartyA": _phoneNumber,
                 "PartyB": _shortCode, //Till  No.
                 "PhoneNumber": _phoneNumber,
-                "CallBackURL": "https://b84e-196-207-163-68.ngrok.io/stk_callback",
+                "CallBackURL": "https://yayampesapi.herokuapp.com/stk_callback",
                 "AccountReference": "YayaNanies digital Merchants",
                 "TransactionDesc": "_transDec"
 
