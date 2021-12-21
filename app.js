@@ -68,7 +68,7 @@ app.post('/stk', access, _urlencoded, function(req, res) {
                 "PartyB": _shortCode, //Till  No.
                 "PhoneNumber": _phoneNumber,
                 "CallBackURL": "https://b84e-196-207-163-68.ngrok.io/stk_callback",
-                "AccountReference": "TopFind digital Merchants",
+                "AccountReference": "YayaNanies digital Merchants",
                 "TransactionDesc": "_transDec"
 
             }
