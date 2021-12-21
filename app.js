@@ -85,6 +85,7 @@ app.post('/stk', access, _urlencoded, function(req, res) {
 
                 res.status(200).json(body);
                 console.log(body);
+                console.log("USER_ID", _UserID)
 
 
 
