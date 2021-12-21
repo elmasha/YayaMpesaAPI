@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 
 
 
-let _checkoutRequestId;
+let _checkoutRequestId, _UserName, _UserID;
 
 ///------STK push ------/////
 
@@ -41,8 +41,8 @@ app.post('/stk', access, _urlencoded, function(req, res) {
 
     let _phoneNumber = req.body.phone
     let _Amount = req.body.amount
-    let _UserID = req.body.user_id
-    let _UserName = req.body.User_name
+    _UserID = req.body.user_id
+    _UserName = req.body.User_name
 
     let endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     let auth = "Bearer " + req.access_token
