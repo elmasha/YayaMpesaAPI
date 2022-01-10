@@ -350,7 +350,7 @@ app.post('/stk_register', access, _urlencoded, function(req, res) {
                 "PartyA":_BPhone,
                 "PartyB": _shortCode, //Till  No.
                 "PhoneNumber": _BPhone,
-                "CallBackURL": "https://70aa-154-153-49-51.ngrok.io/stk_callback2",
+                "CallBackURL": "https://yayampesapi.herokuapp.com/stk_callback2",
                 "AccountReference": "YayaNanies ",
                 "TransactionDesc": "_transDec"
 
