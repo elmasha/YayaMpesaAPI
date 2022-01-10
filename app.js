@@ -182,7 +182,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
 
                 db.collection("Yaya_Employer").doc(_UID).collection("Notifications").doc().set({
                     title: "Mpesa payment",
-                    desc: _Name + " you have successfully a paid ksh/" + _Amount,
+                    desc: _Name + " you have successfully a paid ksh/" + amount,
                     type: "Mpesa payment",
                     to: _UID,
                     from: _UID,
@@ -229,7 +229,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
 
                 db.collection("Yaya_Employer").doc(_UID).collection("Notifications").doc().set({
                     title: "Mpesa payment",
-                    desc: _Name + " you have successfully a paid ksh/" + _Amount,
+                    desc: _Name + " you have successfully a paid ksh/" + amount,
                     type: "Mpesa payment",
                     to: _UID,
                     from: _UID,
