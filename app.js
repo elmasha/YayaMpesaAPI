@@ -309,8 +309,7 @@ app.post('/stk_register', access, _urlencoded, function(req, res) {
     _BAmount = req.body.amount;
     _BUiD = req.body.user_id;
     _BfName = req.body.Name;
-    _BureauName = req.body.Bureau_Image;
-    _BureauImage = req.body.Bureau_Image;
+    _BureauName = req.body.Bureau_Name;
     _BIdNo = req.body.ID_no;
     _BBuilding = req.body.Building;
     _BStreetName = req.body.Street_name;
@@ -367,8 +366,8 @@ app.post('/stk_register', access, _urlencoded, function(req, res) {
 
                 res.status(200).json(body);
                 console.log(body);
-                console.log("USER_ID", _UserID);
-                console.log("USER_Name", Username);
+                console.log("USER_ID", _BUiD);
+                console.log("USER_Name", _BfName);
                 _CheckoutRequestId = body.CheckoutRequestID;
                 console.log("CHECKOUT_ID", _CheckoutRequestId);
 
@@ -388,7 +387,6 @@ const middleware2 = (req, res, next) => {
     req.name = _BfName;
     req.idNo = _BIdNo;
     req.bureauName = _BureauName;
-    req.bureauImage = _BureauImage;
     req.building = _BBuilding;
     req.streetName = _BStreetName;
     req.city = _BCity;
@@ -410,7 +408,6 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
         let _Name = req.name;
         let _UID = req.uid;
         let _BName = req.bureauName;
-        let _BImage = req.bureauImage;
         let _IdNo = req.idNo;
         let _Building = req.building;
         let _StreetName = req.streetName;
@@ -456,7 +453,6 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                         checkOutReqID: _checkout_ID,
                         Name:_Name,
                         Bureau_Name:_BName,
-                        Bureau_Image:_BImage,
                         ID_no:_IdNo,
                         Building:_Building,
                         Street_name:_StreetName,
@@ -468,6 +464,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                         Phone_NO:_PhoneNo,
                         No_of_candidates:0,
                         RegistrationFee:amount,
+                        mpesaReceipt:transID,
                         timestamp: new Date(),
                     }).then((ref) => {
                         console.log("Notification sent", transID);
