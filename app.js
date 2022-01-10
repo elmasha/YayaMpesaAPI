@@ -3,7 +3,8 @@ const request = require('request')
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
-const db = require("./firebase/firebaseConnect");
+const fs = require('firebase-admin');
+
 
 
 ///-----Port-----///
@@ -13,6 +14,16 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static('public'));
 
+
+///----FireStore ----//
+
+const serviceAccount = require('./servicekey.json');
+
+fs.initializeApp({
+    credential: fs.credential.cert(serviceAccount)
+});
+
+const db = fs.firestore();
 
 
 //----AllOW ACCESS -----//
@@ -121,6 +132,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
         var amount = '';
         var transdate = '';
         var transNo = '';
+
 
         let _checkout_ID = req.checkoutID;
         let _Name = req.name;

@@ -9,5 +9,6 @@ const firebaseApp = firebase.initializeApp({
     appId: "1:934333898387:web:415ae3b8c0585bd271b766",
     measurementId: "G-676Y2E1CSE"
 });
-
-module.exports = firebaseApp;
+const db = firebase.firestore();
+const user = db.collection("user");
+module.exports = user;
