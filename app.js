@@ -406,7 +406,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
         var transNo = '';
         let _checkout_ID = req.checkoutID;
         let _Name = req.name;
-        let _UID = req.uid;
+        let _UiD = req.uid;
         let _BName = req.bureauName;
         let _IdNo = req.idNo;
         let _Building = req.building;
@@ -437,17 +437,17 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                     mpesaReceipt: transID,
                     paidAmount: amount,
                     transNo: transNo,
-                    Doc_ID: _UID,
+                    Doc_ID: _UiD,
                     checkOutReqID: _checkout_ID,
                     user_Name: _Name,
                     timestamp: transdate,
                 }).then((ref) => {
+
+
                     console.log("Added doc with ID: ", transID);
-
-
                     ///-----Admin section -----//
 
-                    db.collection("Yaya_Bureau").doc(_UID).update({
+                    db.collection("Yaya_Bureau").doc(_UiD).update({
                         preference_count: true,
                         mpesa_receipt: transID,
                         checkOutReqID: _checkout_ID,
@@ -460,6 +460,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                         County: _County,
                         Email: _Email,
                         Box_No: _BoxNo,
+                        User_id: _UiD,
                         Postal_code: _PostalCode,
                         Phone_NO: _PhoneNo,
                         No_of_candidates: 0,
@@ -473,7 +474,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
 
                 });
 
-                db.collection("Yaya_Bureau").doc(_UID).collection("Notifications").doc().set({
+                db.collection("Yaya_Bureau").doc(_UiD).collection("Notifications").doc().set({
                     title: "Mpesa payment",
                     desc: _Name + " you have successfully a paid ksh/" + amount,
                     type: "Mpesa payment",
@@ -483,6 +484,8 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                 }).then((ref) => {
                     console.log("Notification sent", transID);
                 });
+
+
 
 
             } else {
@@ -496,18 +499,18 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                     mpesaReceipt: transID,
                     paidAmount: amount,
                     transNo: transNo,
-                    Doc_ID: _UID,
+                    Doc_ID: _UiD,
                     checkOutReqID: _checkout_ID,
                     user_Name: _Name,
                     timestamp: transdate,
-                    User_id: _UID,
+                    User_id: _UiD,
                 }).then((ref) => {
                     console.log("backUp Added doc with ID: ", transID);
 
 
                     ///-----Admin section -----//
 
-                    db.collection("Yaya_Bureau").doc(_UID).update({
+                    db.collection("Yaya_Bureau").doc(_UiD).update({
                         preference_count: true,
                         mpesa_receipt: transID,
                         checkOutReqID: _checkout_ID,
@@ -517,6 +520,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                         Building: _Building,
                         Street_name: _StreetName,
                         City: _City,
+                        User_id: _UiD,
                         County: _County,
                         Email: _Email,
                         Box_No: _BoxNo,
@@ -526,7 +530,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                         RegistrationFee: amount,
                         timestamp: new Date(),
                     }).then((ref) => {
-                        console.log("Notification sent", transID);
+                        console.log("Data added", transID);
                     })
 
                     ////------Close Admin -----////
@@ -537,8 +541,8 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                     title: "Mpesa payment",
                     desc: _Name + " you have successfully a paid ksh/" + amount,
                     type: "Mpesa payment",
-                    to: _UID,
-                    from: _UID,
+                    to: _UiD,
+                    from: _UiD,
                     timestamp: new Date(),
                 }).then((ref) => {
                     console.log("Notification sent", transID);
