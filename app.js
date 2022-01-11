@@ -302,9 +302,6 @@ let _BfName, _BureauImage, _BureauName, _BIdNo,
 let _CheckoutRequestId;
 
 app.post('/stk_register', access, _urlencoded, function(req, res) {
-
-
-
     _BPhone = req.body.Phone_NO;
     _BAmount = req.body.amount;
     _BUiD = req.body.user_id;
@@ -445,8 +442,8 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
 
 
                     console.log("Added doc with ID: ", transID);
-                    ///-----Admin section -----//
 
+                    ///-----Admin section -----//
                     db.collection("Yaya_Bureau").doc(_UiD).update({
                         preference_count: true,
                         mpesa_receipt: transID,
@@ -468,7 +465,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                         timestamp: new Date(),
                     }).then((ref) => {
                         console.log("Data stored", transID);
-                    })
+                    });
 
                     ////------Close Admin -----////
 
@@ -537,7 +534,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
 
                 });
 
-                db.collection("Yaya_Bureau").doc(_UID).collection("Notifications").doc().set({
+                db.collection("Yaya_Bureau").doc(_UiD).collection("Notifications").doc().set({
                     title: "Mpesa payment",
                     desc: _Name + " you have successfully a paid ksh/" + amount,
                     type: "Mpesa payment",
