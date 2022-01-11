@@ -442,7 +442,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                     console.log("BackUP Added doc with ID: ", transID);
 
                     ///-----Admin section -----//
-                    db.collection("Yaya_Bureau").doc(_UiD).update({
+                    db.collection("Yaya_Bureau").doc(_UiD).set({
                         preference_count: true,
                         mpesa_receipt: transID,
                         checkOutReqID: _checkout_ID,
@@ -504,7 +504,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                 });
 
                 ///-----Admin section -----//
-                db.collection("Yaya_Bureau").doc(_UiD).update({
+                db.collection("Yaya_Bureau").doc(_UiD).set({
                     preference_count: true,
                     mpesa_receipt: transID,
                     checkOutReqID: _checkout_ID,
