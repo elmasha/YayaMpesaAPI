@@ -296,15 +296,15 @@ app.post('/stk/query', access, _urlencoded, function(req, res, next) {
 
 
 ///-------  Stk Registration-----////
-let _BfName,_BureauImage,_BureauName,_BIdNo,
-_BBuilding,_BStreetName,_BCity,_BCounty,_BEmail,_BBox,
-_BPostalCode,_BPhone,_BAmount,_BUiD;
+let _BfName, _BureauImage, _BureauName, _BIdNo,
+    _BBuilding, _BStreetName, _BCity, _BCounty, _BEmail, _BBox,
+    _BPostalCode, _BPhone, _BAmount, _BUiD;
 let _CheckoutRequestId;
 
 app.post('/stk_register', access, _urlencoded, function(req, res) {
 
-    
-  
+
+
     _BPhone = req.body.Phone_NO;
     _BAmount = req.body.amount;
     _BUiD = req.body.user_id;
@@ -346,7 +346,7 @@ app.post('/stk_register', access, _urlencoded, function(req, res) {
                 "Timestamp": timeStamp,
                 "TransactionType": "CustomerPayBillOnline",
                 "Amount": _BAmount,
-                "PartyA":_BPhone,
+                "PartyA": _BPhone,
                 "PartyB": _shortCode, //Till  No.
                 "PhoneNumber": _BPhone,
                 "CallBackURL": "https://yayampesapi.herokuapp.com/stk_callback2",
@@ -451,23 +451,22 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                         preference_count: true,
                         mpesa_receipt: transID,
                         checkOutReqID: _checkout_ID,
-                        Name:_Name,
-                        Bureau_Name:_BName,
-                        ID_no:_IdNo,
-                        Building:_Building,
-                        Street_name:_StreetName,
-                        City:_City,
-                        County:_County,
-                        Email:_Email,
-                        Box_No:_BoxNo,
-                        Postal_code:_PostalCode,
-                        Phone_NO:_PhoneNo,
-                        No_of_candidates:0,
-                        RegistrationFee:amount,
-                        mpesaReceipt:transID,
+                        Name: _Name,
+                        Bureau_Name: _BName,
+                        ID_no: _IdNo,
+                        Building: _Building,
+                        Street_name: _StreetName,
+                        City: _City,
+                        County: _County,
+                        Email: _Email,
+                        Box_No: _BoxNo,
+                        Postal_code: _PostalCode,
+                        Phone_NO: _PhoneNo,
+                        No_of_candidates: 0,
+                        RegistrationFee: amount,
                         timestamp: new Date(),
                     }).then((ref) => {
-                        console.log("Notification sent", transID);
+                        console.log("Data stored", transID);
                     })
 
                     ////------Close Admin -----////
@@ -503,16 +502,29 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                     timestamp: transdate,
                     User_id: _UID,
                 }).then((ref) => {
-                    console.log("Added doc with ID: ", transID);
+                    console.log("backUp Added doc with ID: ", transID);
 
 
                     ///-----Admin section -----//
 
-                    db.collection("Yaya_Employer").doc(_UID).update({
+                    db.collection("Yaya_Bureau").doc(_UID).update({
                         preference_count: true,
                         mpesa_receipt: transID,
                         checkOutReqID: _checkout_ID,
-                        payment_date: new Date(),
+                        Name: _Name,
+                        Bureau_Name: _BName,
+                        ID_no: _IdNo,
+                        Building: _Building,
+                        Street_name: _StreetName,
+                        City: _City,
+                        County: _County,
+                        Email: _Email,
+                        Box_No: _BoxNo,
+                        Postal_code: _PostalCode,
+                        Phone_NO: _PhoneNo,
+                        No_of_candidates: 0,
+                        RegistrationFee: amount,
+                        timestamp: new Date(),
                     }).then((ref) => {
                         console.log("Notification sent", transID);
                     })
@@ -521,7 +533,7 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
 
                 });
 
-                db.collection("Yaya_Employer").doc(_UID).collection("Notifications").doc().set({
+                db.collection("Yaya_Bureau").doc(_UID).collection("Notifications").doc().set({
                     title: "Mpesa payment",
                     desc: _Name + " you have successfully a paid ksh/" + amount,
                     type: "Mpesa payment",
