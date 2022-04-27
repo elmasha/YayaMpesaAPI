@@ -55,11 +55,11 @@ app.post('/stk', access, _urlencoded, function(req, res) {
     _UserID = req.body.user_id
     Username = req.body.User_name
 
-    let endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+    let endpoint = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     let auth = "Bearer " + req.access_token
 
-    let _shortCode = '174379';
-    let _passKey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+    let _shortCode = '4087943';
+    let _passKey = 'bb2724f53956f05ca6772b8a79e193c88953048d221b8f4f47d96c9b8f641dbb'
 
 
     const timeStamp = (new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -3);
@@ -251,9 +251,9 @@ app.post('/stk/query', access, _urlencoded, function(req, res, next) {
 
     auth = "Bearer " + req.access_token
 
-    let endpoint = 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query'
-    let _shortCode = '174379';
-    let _passKey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+    let endpoint = 'https://api.safaricom.co.ke/mpesa/stkpushquery/v1/query'
+    let _shortCode = '4087943';
+    let _passKey = 'bb2724f53956f05ca6772b8a79e193c88953048d221b8f4f47d96c9b8f641dbb'
 
     const timeStamp = (new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -3)
     const password = Buffer.from(`${_shortCode}${_passKey}${timeStamp}`).toString('base64')
@@ -317,11 +317,11 @@ app.post('/stk_register', access, _urlencoded, function(req, res) {
     _BPostalCode = req.body.Postal_code;
 
 
-    let endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+    let endpoint = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
     let auth = "Bearer " + req.access_token
 
-    let _shortCode = '174379';
-    let _passKey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+    let _shortCode = '4087943';
+    let _passKey = 'bb2724f53956f05ca6772b8a79e193c88953048d221b8f4f47d96c9b8f641dbb'
 
 
     const timeStamp = (new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -3);
@@ -559,9 +559,9 @@ app.post('/stk/query2', access, _urlencoded, function(req, res, next) {
 
     auth = "Bearer " + req.access_token
 
-    let endpoint = 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query'
-    let _shortCode = '174379';
-    let _passKey = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+    let endpoint = 'https://api.safaricom.co.ke/mpesa/stkpushquery/v1/query'
+    let _shortCode = '4087943';
+    let _passKey = 'bb2724f53956f05ca6772b8a79e193c88953048d221b8f4f47d96c9b8f641dbb'
 
     const timeStamp = (new Date()).toISOString().replace(/[^0-9]/g, '').slice(0, -3)
     const password = Buffer.from(`${_shortCode}${_passKey}${timeStamp}`).toString('base64')
@@ -616,8 +616,8 @@ app.get('/access_token', access, (req, res) => {
 
 function access(res, req, next) {
 
-    let endpoint = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
-    let auth = new Buffer.from("sf4SHyX9bZJZMetkctEpV6aqULDeoeMT:iiP0V2gPVd8WD0uC").toString('base64');
+    let endpoint = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+    let auth = new Buffer.from("zvvGuwDPUGvG7EPKlD0x0eA4Isq7CP5p:5xCnqwluYEFlWOLG").toString('base64');
 
     request({
             url: endpoint,
