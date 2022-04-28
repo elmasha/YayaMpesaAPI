@@ -442,6 +442,29 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                     console.log("BackUP Added doc with ID: ", transID);
 
                     ///-----Admin section -----//
+
+                    var sfDocRef = db.collection("Admin").doc("Total_amount");
+
+                db.runTransaction((transaction) => {
+                    return transaction.get(sfDocRef).then((sfDoc) => {
+                        if (!sfDoc.exists) {
+                            throw "Document does not exist!";
+                        }
+                        var newAmount = sfDoc.data().Total_income;
+                        var total_amount = newAmount + amount;
+                        transaction.update(sfDocRef, { Total_income: total_amount });
+                        return total_amount;
+
+                    });
+                }).then((total_credit) => {
+                    console.log("Total_Amount increased to ", total_amount);
+
+                }).catch((err) => {
+                    // This will be an "population is too big" error.
+                    console.error(err);
+                });
+
+
                     db.collection("Yaya_Bureau").doc(_UiD).set({
                         preference_count: true,
                         mpesa_receipt: transID,
@@ -501,6 +524,30 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                     User_id: _UiD,
                 }).then((ref) => {
                     console.log("backUp Added doc with ID: ", transID);
+                });
+
+
+
+
+                var sfDocRef = db.collection("Admin").doc("Total_amount");
+
+                db.runTransaction((transaction) => {
+                    return transaction.get(sfDocRef).then((sfDoc) => {
+                        if (!sfDoc.exists) {
+                            throw "Document does not exist!";
+                        }
+                        var newAmount = sfDoc.data().Total_income;
+                        var total_amount = newAmount + amount;
+                        transaction.update(sfDocRef, { Total_income: total_amount });
+                        return total_amount;
+
+                    });
+                }).then((total_credit) => {
+                    console.log("Total_Amount increased to ", total_amount);
+
+                }).catch((err) => {
+                    // This will be an "population is too big" error.
+                    console.error(err);
                 });
 
                 ///-----Admin section -----//
