@@ -181,6 +181,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
                     desc: _Name + " you have successfully a paid ksh/" + amount,
                     type: "Mpesa payment",
                     to: _UID,
+                    status: "none",
                     from: _UID,
                     timestamp: new Date(),
                 }).then((ref) => {
@@ -228,6 +229,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
                     desc: _Name + " you have successfully a paid ksh/" + amount,
                     type: "Mpesa payment",
                     to: _UID,
+                    status: "none",
                     from: _UID,
                     timestamp: new Date(),
                 }).then((ref) => {
@@ -445,24 +447,24 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
 
                     var sfDocRef = db.collection("Admin").doc("Total_amount");
 
-                db.runTransaction((transaction) => {
-                    return transaction.get(sfDocRef).then((sfDoc) => {
-                        if (!sfDoc.exists) {
-                            throw "Document does not exist!";
-                        }
-                        var newAmount = sfDoc.data().Total_income;
-                        var total_amount = newAmount + amount;
-                        transaction.update(sfDocRef, { Total_income: total_amount });
-                        return total_amount;
+                    db.runTransaction((transaction) => {
+                        return transaction.get(sfDocRef).then((sfDoc) => {
+                            if (!sfDoc.exists) {
+                                throw "Document does not exist!";
+                            }
+                            var newAmount = sfDoc.data().Total_income;
+                            var total_amount = newAmount + amount;
+                            transaction.update(sfDocRef, { Total_income: total_amount });
+                            return total_amount;
 
+                        });
+                    }).then((total_credit) => {
+                        console.log("Total_Amount increased to ", total_amount);
+
+                    }).catch((err) => {
+                        // This will be an "population is too big" error.
+                        console.error(err);
                     });
-                }).then((total_credit) => {
-                    console.log("Total_Amount increased to ", total_amount);
-
-                }).catch((err) => {
-                    // This will be an "population is too big" error.
-                    console.error(err);
-                });
 
 
                     db.collection("Yaya_Bureau").doc(_UiD).set({
@@ -494,9 +496,10 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
 
                 db.collection("Yaya_Bureau").doc(_UiD).collection("Notifications").doc().set({
                     title: "Mpesa payment",
-                    desc: _Name + " you have successfully a paid ksh/" + amount,
+                    desc: _Name + " you have successfully a paid ksh/" + amount + " for registration fee",
                     type: "Mpesa payment",
                     to: _UID,
+                    status: "none",
                     from: _UID,
                     timestamp: new Date(),
                 }).then((ref) => {
@@ -579,9 +582,10 @@ app.post('/stk_callback2', _urlencoded, middleware2, function(req, res, next) {
                 ///-----Notifications -----//
                 db.collection("Yaya_Bureau").doc(_UiD).collection("Notifications").doc().set({
                     title: "Mpesa payment",
-                    desc: _Name + " you have successfully a paid ksh/" + amount,
+                    desc: _Name + " you have successfully a paid ksh/" + amount + " for registration fee",
                     type: "Mpesa payment",
                     to: _UiD,
+                    status: "none",
                     from: _UiD,
                     timestamp: new Date(),
                 }).then((ref) => {
