@@ -161,6 +161,32 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
                     console.log("Added doc with ID: ", transID);
 
 
+                    var sfDocRef = db.collection("Admin").doc("Total_amount");
+
+                    db.runTransaction((transaction) => {
+                        return transaction.get(sfDocRef).then((sfDoc) => {
+                            if (!sfDoc.exists) {
+                                throw "Document does not exist!";
+                            }
+                            var newAmount = sfDoc.data().Total_income;
+                            var total_amount = newAmount + amount;
+                            transaction.update(sfDocRef, { Total_income: total_amount });
+                            return total_amount;
+
+                        });
+                    }).then((total_credit) => {
+                        console.log("Total_Amount increased to ", total_amount);
+
+                    }).catch((err) => {
+                        // This will be an "population is too big" error.
+                        console.error(err);
+                    });
+
+
+
+
+
+
                     ///-----Admin section -----//
 
                     db.collection("Yaya_Employer").doc(_UID).update({
@@ -206,7 +232,34 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
                     timestamp: transdate,
                     User_id: _UID,
                 }).then((ref) => {
-                    console.log("Added doc with ID: ", transID);
+                    console.log("Payments_backup Added", transID);
+
+
+
+                    var sfDocRef = db.collection("Admin").doc("Total_amount");
+
+                    db.runTransaction((transaction) => {
+                        return transaction.get(sfDocRef).then((sfDoc) => {
+                            if (!sfDoc.exists) {
+                                throw "Document does not exist!";
+                            }
+                            var newAmount = sfDoc.data().Total_income;
+                            var total_amount = newAmount + amount;
+                            transaction.update(sfDocRef, { Total_income: total_amount });
+                            return total_amount;
+
+                        });
+                    }).then((total_credit) => {
+                        console.log("Total_Amount increased to ", total_amount);
+
+                    }).catch((err) => {
+                        // This will be an "population is too big" error.
+                        console.error(err);
+                    });
+
+
+
+
 
 
                     ///-----Admin section -----//
@@ -217,7 +270,7 @@ app.post('/stk_callback', _urlencoded, middleware, function(req, res, next) {
                         checkOutReqID: _checkout_ID,
                         payment_date: new Date(),
                     }).then((ref) => {
-                        console.log("Notification sent", transID);
+                        console.log("Receipt added", transID);
                     })
 
                     ////------Close Admin -----////
